@@ -1,0 +1,10 @@
+package com.muralex.navstructure.data.repository.articles.datasource
+
+import com.muralex.navstructure.data.model.articles.ArticleData
+import kotlinx.coroutines.flow.Flow
+
+interface ArticlesDataSource {
+    fun getSectionArticles(sectionId: String): Flow<List<ArticleData>>
+    suspend fun getSectionArticlesList(sectionId: String): List<ArticleData>
+    suspend fun getArticleById(articleId: String): ArticleData
+}
