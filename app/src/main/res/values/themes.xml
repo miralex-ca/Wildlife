@@ -32,7 +32,7 @@
         <item name="colorOnBackground">@color/colorOnBackground</item>
         <item name="appBarOverlay">@style/AppTheme.AppBarOverlay</item>
         <item name="popupOverlay">@style/AppTheme.PopupOverlay</item>
-
+        <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.App.SmallComponent</item>
     </style>
 
     <style name="App.TextView" parent="@android:style/Widget.TextView">
@@ -46,6 +46,10 @@
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="ShapeAppearance.App.SmallComponent" parent="ShapeAppearance.MaterialComponents.SmallComponent">
+        <item name="cornerSize">8dp</item>
+    </style>
 
 
 

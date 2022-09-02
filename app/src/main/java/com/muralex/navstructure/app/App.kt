@@ -24,8 +24,8 @@ class App : Application(), Configuration.Provider {
             Timber.plant(Timber.DebugTree())
 
             /// populate on each app start in debug version
-            val populate = OneTimeWorkRequestBuilder<PrepopulateWorker>().build()
-            WorkManager.getInstance(applicationContext).enqueue(populate)
+//            val populate = OneTimeWorkRequestBuilder<PrepopulateWorker>().build()
+//            WorkManager.getInstance(applicationContext).enqueue(populate)
         }
     }
 

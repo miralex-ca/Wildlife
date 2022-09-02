@@ -1,5 +1,6 @@
 package com.muralex.navstructure.app.di
 
+import com.muralex.navstructure.app.utils.Dispatchers
 import com.muralex.navstructure.presentation.utils.DelayProvider
 import dagger.Module
 import dagger.Provides
@@ -14,5 +15,9 @@ class AppModule {
     @Singleton
     @Provides
     fun provideDelayProvide() : DelayProvider = DelayProvider.Base()
+
+    @Singleton
+    @Provides
+    fun provideDispatchers() : Dispatchers = Dispatchers.Base()
 
 }

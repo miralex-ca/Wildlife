@@ -7,7 +7,9 @@ import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -50,8 +52,12 @@ class HomeFragment : Fragment() {
     }
 
     private fun setUpObservation() {
-        viewModel.viewState.observe(viewLifecycleOwner) { state ->
-            renderViewState(state)
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.viewState.collect { uiState ->
+                    renderViewState(uiState)
+                }
+            }
         }
 
         viewModel.viewEffect.onEach {

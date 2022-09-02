@@ -10,4 +10,11 @@
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="article_image">image</string>
+    <string name="setting_detail_navigation">setting_detail_navigation</string>
+    <string name="menu_detail_navigation_title">Navigation display</string>
+    <string name="menu_detail_navigation_on">Enable navigation</string>
+    <string name="menu_detail_navigation_off">Disable navigation</string>
+    <string name="next_btn_title">Next</string>
+    <string name="previous_btn_title">Previous</string>
+    <string name="setting_first_launch">setting_first_launch</string>
 </resources>

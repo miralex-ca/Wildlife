@@ -2,6 +2,7 @@ package com.muralex.navstructure.data.repository.navstructure.datasource
 
 import com.muralex.navstructure.data.mappers.json_data.SectionJsonToDataMapper
 import com.muralex.navstructure.data.model.structure.SectionData
+import timber.log.Timber
 
 class NavDataSourceImpl(
     private val sectionsJsonUtil: SectionsJsonUtil,
@@ -16,6 +17,7 @@ class NavDataSourceImpl(
     }
 
     override suspend fun getSectionById(sectionId: String): SectionData {
+
         val sections = getAllSections()
         return sections.first { it.id == sectionId }
     }

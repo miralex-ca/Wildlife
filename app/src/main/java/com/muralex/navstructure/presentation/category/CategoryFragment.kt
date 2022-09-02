@@ -1,33 +1,40 @@
 package com.muralex.navstructure.presentation.category
 
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
+import androidx.core.view.isInvisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.muralex.navstructure.R
 import com.muralex.navstructure.app.utils.Constants
+import com.muralex.navstructure.app.utils.gone
+import com.muralex.navstructure.app.utils.visible
 import com.muralex.navstructure.databinding.FragmentCategoryBinding
 import com.muralex.navstructure.domain.data.article.Article
 import com.muralex.navstructure.presentation.category.CategoryContract.UserAction
 import com.muralex.navstructure.presentation.category.CategoryContract.ViewIntent
 import com.muralex.navstructure.presentation.utils.DelayProvider
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class CategoryFragment : Fragment() {
-
     private var _binding: FragmentCategoryBinding? = null
     private val binding get() = _binding!!
     private val viewModel: CategoryViewModel by viewModels()
@@ -46,17 +53,19 @@ class CategoryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         val sectionID = arguments?.getString(Constants.SECTION_ARG_KEY) ?: ""
         setupNewsList(sectionID)
         setUpObservation()
-
         processUiEvent(UserAction.LaunchScreen(sectionID))
     }
 
     private fun setUpObservation() {
-        viewModel.viewState.observe(viewLifecycleOwner) { state ->
-            renderViewState(state)
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.viewState.collect { uiState ->
+                    renderViewState(uiState)
+                }
+            }
         }
 
         viewModel.viewEffect.onEach {
@@ -109,8 +118,7 @@ class CategoryFragment : Fragment() {
 
     private fun refreshList(data: List<Article>?) {
         listAdapter.submitList(data)
-//        if (data.isNullOrEmpty()) emptyUI()
-//        else notEmptyUI()
+
     }
 
     private fun navigateToDetail(item: Article, sectionID: String) = lifecycleScope.launch {

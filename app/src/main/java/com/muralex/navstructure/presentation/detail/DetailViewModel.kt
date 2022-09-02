@@ -4,25 +4,29 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.muralex.navstructure.domain.usecases.articles.GetArticleUseCase
+import com.muralex.navstructure.app.utils.Dispatchers
+import com.muralex.navstructure.app.utils.SettingsManager
 import com.muralex.navstructure.domain.usecases.articles.GetDetailArticleUseCase
 import com.muralex.navstructure.presentation.detail.DetailContract.ModelAction
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class DetailViewModel @Inject constructor(
-    private val getArticleUseCase: GetArticleUseCase,
-    private val getDetailArticleUseCase: GetDetailArticleUseCase
+    private val getDetailArticleUseCase: GetDetailArticleUseCase,
+    private val settingsManager: SettingsManager
 ) : ViewModel() {
 
-    private val _viewState = MutableLiveData<DetailContract.ViewState>()
-    val viewState: LiveData<DetailContract.ViewState>
-        get() = _viewState
+    private var currentArticleId: String? = null
+    private var articleSectionId: String? = null
+
+    private val _viewState = MutableStateFlow<DetailContract.ViewState>(DetailContract.ViewState.Idle)
+    val viewState: StateFlow<DetailContract.ViewState> = _viewState
 
     private val _viewEffect: Channel<DetailContract.ViewEffect> = Channel()
     val viewEffect = _viewEffect.receiveAsFlow()
@@ -38,19 +42,34 @@ class DetailViewModel @Inject constructor(
 
     private fun handleModelAction(modelAction: ModelAction) {
         when (modelAction) {
-            is ModelAction.GetArticle -> getData(modelAction.articleID, modelAction.sectionID)
+            is ModelAction.ChangeNavigationSetting -> changeNavigationDisplay()
+            is ModelAction.GetArticle -> {
+                if (currentArticleId == null) currentArticleId = modelAction.articleID
+                if (articleSectionId == null) articleSectionId = modelAction.sectionID
+                getData()
+            }
+
+            is ModelAction.ReplaceToArticle -> {
+                currentArticleId = modelAction.articleID
+                articleSectionId = modelAction.sectionID
+                getData()
+            }
         }
     }
 
-    private fun getData(articleID: String?, sectionID: String) {
-        viewModelScope.launch(Dispatchers.IO) {
+    private fun changeNavigationDisplay() {
+        val display = !settingsManager.isDetailNavigationEnabled()
+        settingsManager.setDetailNavigation(display)
+        setEffect(DetailContract.ViewEffect.DisplayNavigation(display))
+    }
 
-            articleID?.let {
-                val articleDetail = getDetailArticleUseCase(articleID, sectionID)
-                if (articleDetail.article.id.isBlank()) _viewState.postValue(DetailContract.ViewState.Idle)
-                else _viewState.postValue(DetailContract.ViewState.ArticleLoaded(articleDetail))
+    private fun getData() {
+        viewModelScope.launch {
+            currentArticleId?.let {
+                val articleDetail = getDetailArticleUseCase(it, articleSectionId ?: "")
+                if (articleDetail.article.id.isBlank()) _viewState.value = DetailContract.ViewState.Idle
+                else _viewState.value = DetailContract.ViewState.ArticleLoaded(articleDetail)
             }
-
         }
     }
 

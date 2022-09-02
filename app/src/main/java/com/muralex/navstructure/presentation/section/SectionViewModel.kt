@@ -4,20 +4,20 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.muralex.navstructure.domain.data.navstructure.SectionWithChildren
-import com.muralex.navstructure.domain.usecases.articles.GetSectionWithArticlesUseCase
+import com.muralex.navstructure.app.utils.Dispatchers
 import com.muralex.navstructure.domain.usecases.structure.GetSectionWithChildrenUseCase
 import com.muralex.navstructure.presentation.section.SectionContract.ModelAction
 import com.muralex.navstructure.presentation.section.SectionContract.ViewEffect
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class SectionViewModel @Inject constructor(
-    private val sectionWithChildrenUseCase: GetSectionWithChildrenUseCase
+    private val sectionWithChildrenUseCase: GetSectionWithChildrenUseCase,
+    private val dispatchers: Dispatchers
 ) : ViewModel() {
 
     private val _viewState = MutableLiveData<SectionContract.ViewState>()
@@ -44,7 +44,7 @@ class SectionViewModel @Inject constructor(
     }
 
     private fun getData(sectionID: String) {
-        viewModelScope.launch(Dispatchers.IO) {
+        dispatchers.launchBackground(viewModelScope) {
             val list = sectionWithChildrenUseCase(sectionID)
             if (list.subSections.isEmpty()) _viewState.postValue(SectionContract.ViewState.EmptyList)
             else _viewState.postValue(SectionContract.ViewState.ListLoaded(list))

@@ -34,7 +34,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintHeight_min="@dimen/_200sdp"
+            app:layout_constraintHeight_min="@dimen/_390sdp"
             app:layout_constraintWidth_max="@dimen/card_max_width"
             >
 

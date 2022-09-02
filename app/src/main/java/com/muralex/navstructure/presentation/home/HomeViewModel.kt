@@ -4,22 +4,25 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.muralex.navstructure.app.utils.Dispatchers
 import com.muralex.navstructure.domain.usecases.structure.GetSectionsListUseCase
+import com.muralex.navstructure.presentation.category.CategoryContract
 import com.muralex.navstructure.presentation.home.HomeContract.*
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val getSectionsListUseCase: GetSectionsListUseCase,
+    private val getSectionsListUseCase: GetSectionsListUseCase
 ) : ViewModel() {
 
-    private val _viewState = MutableLiveData<ViewState>()
-    val viewState: LiveData<ViewState>
-        get() = _viewState
+    private val _viewState = MutableStateFlow<ViewState>(ViewState.EmptyList)
+    val viewState: StateFlow<ViewState> = _viewState
 
     private val _viewEffect: Channel<ViewEffect> = Channel()
     val viewEffect = _viewEffect.receiveAsFlow()
@@ -40,10 +43,10 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun getData() = viewModelScope.launch(Dispatchers.IO) {
+    private fun getData() = viewModelScope.launch {
         val list = getSectionsListUseCase()
-        if (list.isEmpty()) _viewState.postValue(ViewState.EmptyList)
-        else _viewState.postValue(ViewState.ListLoaded(list))
+        if (list.isEmpty()) _viewState.value = ViewState.EmptyList
+        else _viewState.value = (ViewState.ListLoaded(list))
     }
 
 

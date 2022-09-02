@@ -1,9 +1,7 @@
 package com.muralex.navstructure.presentation.section
 
-import com.muralex.navstructure.domain.data.article.SectionWithArticles
 import com.muralex.navstructure.domain.data.navstructure.Section
 import com.muralex.navstructure.domain.data.navstructure.SectionWithChildren
-import com.muralex.navstructure.presentation.home.HomeContract
 import com.muralex.navstructure.presentation.utils.UiEffect
 import com.muralex.navstructure.presentation.utils.UiEvent
 import com.muralex.navstructure.presentation.utils.UiIntent
