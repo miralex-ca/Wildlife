@@ -1,5 +1,7 @@
 package com.muralex.wildlife.domain.usecases.articles
 
+import com.muralex.wildlife.app.utils.Constants.DETAIL_NEXT_KEY
+import com.muralex.wildlife.app.utils.Constants.DETAIL_PREV_KEY
 import com.muralex.wildlife.app.utils.Dispatchers
 import com.muralex.wildlife.app.utils.SettingsManager
 import com.muralex.wildlife.domain.data.article.DetailArticleUI
@@ -26,8 +28,8 @@ class GetDetailArticleUseCase @Inject constructor(
         DetailArticleUI(
             article = mapper.mapFromEntity(article),
             sectionId = sectionID,
-            previousId = neighbors.getString("prev"),
-            nextId = neighbors.getString("next"),
+            previousId = neighbors.getString(DETAIL_PREV_KEY),
+            nextId = neighbors.getString(DETAIL_NEXT_KEY),
             displayNavigation = displayNavigation
         )
     }

@@ -6,6 +6,9 @@ object Constants {
     const val ARTICLE_ARG_KEY = "article"
     const val DATABASE_NAME  = "articles_db"
 
+    const val DETAIL_PREV_KEY  = "prev"
+    const val DETAIL_NEXT_KEY  = "next"
+
     const val ICONS_FOLDER = "file:///android_asset/icons/"
 
     enum class Action {Click, LongClick}

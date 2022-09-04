@@ -2,6 +2,8 @@ package com.muralex.wildlife.data.repository.articles
 
 import android.os.Bundle
 import androidx.core.os.bundleOf
+import com.muralex.wildlife.app.utils.Constants.DETAIL_NEXT_KEY
+import com.muralex.wildlife.app.utils.Constants.DETAIL_PREV_KEY
 import com.muralex.wildlife.data.model.articles.ArticleData
 import com.muralex.wildlife.data.model.structure.SectionDataWithArticles
 import com.muralex.wildlife.data.repository.articles.datasource.ArticlesDataSource
@@ -40,7 +42,7 @@ class ArticleRepositoryImpl(
         val previous = previousItem(sectionArticlesList, articleIndex)
         val next = nextItem(sectionArticlesList, articleIndex)
 
-        return bundleOf("prev" to previous, "next" to next)
+        return bundleOf(DETAIL_PREV_KEY to previous, DETAIL_NEXT_KEY to next)
 
     }
 
