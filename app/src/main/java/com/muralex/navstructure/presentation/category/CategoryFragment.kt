@@ -60,11 +60,9 @@ class CategoryFragment : Fragment() {
     }
 
     private fun setUpObservation() {
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.viewState.collect { uiState ->
-                    renderViewState(uiState)
-                }
+        lifecycleScope.launchWhenStarted {
+            viewModel.viewState.collect { uiState ->
+                renderViewState(uiState)
             }
         }
 
@@ -92,7 +90,8 @@ class CategoryFragment : Fragment() {
     private fun processUiEvent(userAction: UserAction) {
         when (userAction) {
             is UserAction.LaunchScreen -> setIntent(ViewIntent.GetSection(userAction.sectionID))
-            is UserAction.ListItemClick -> setIntent(ViewIntent.Navigate(userAction.article, userAction.sectionID))
+            is UserAction.ListItemClick -> setIntent(ViewIntent.Navigate(userAction.article,
+                userAction.sectionID))
         }
     }
 
@@ -112,7 +111,8 @@ class CategoryFragment : Fragment() {
 
     private fun renderViewEffect(effect: CategoryContract.ViewEffect) {
         when (effect) {
-            is CategoryContract.ViewEffect.Navigate -> navigateToDetail(effect.article, effect.sectionID)
+            is CategoryContract.ViewEffect.Navigate -> navigateToDetail(effect.article,
+                effect.sectionID)
         }
     }
 

@@ -8,16 +8,18 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class CategoryViewModel @Inject constructor(
-    private val sectionWithArticlesUseCase: GetSectionWithArticlesUseCase
+    private val sectionWithArticlesUseCase: GetSectionWithArticlesUseCase,
 ) : ViewModel() {
-    private val _viewState = MutableStateFlow<CategoryContract.ViewState>(CategoryContract.ViewState.EmptyList)
-    val viewState: StateFlow<CategoryContract.ViewState> = _viewState
+    private val _viewState =
+        MutableStateFlow<CategoryContract.ViewState>(CategoryContract.ViewState.EmptyList)
+    val viewState: StateFlow<CategoryContract.ViewState> = _viewState.asStateFlow()
 
     private val _viewEffect: Channel<CategoryContract.ViewEffect> = Channel()
     val viewEffect = _viewEffect.receiveAsFlow()
@@ -43,8 +45,8 @@ class CategoryViewModel @Inject constructor(
     private fun getData(sectionID: String) {
         viewModelScope.launch {
             sectionWithArticlesUseCase(sectionID).collect { list ->
-                if (list.articles.isEmpty()) _viewState.value  = CategoryContract.ViewState.EmptyList
-                else _viewState.value  = CategoryContract.ViewState.ListLoaded(list)
+                if (list.articles.isEmpty()) _viewState.value = CategoryContract.ViewState.EmptyList
+                else _viewState.value = CategoryContract.ViewState.ListLoaded(list)
             }
         }
     }

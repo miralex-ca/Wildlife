@@ -12,6 +12,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -19,14 +20,15 @@ import javax.inject.Inject
 @HiltViewModel
 class DetailViewModel @Inject constructor(
     private val getDetailArticleUseCase: GetDetailArticleUseCase,
-    private val settingsManager: SettingsManager
+    private val settingsManager: SettingsManager,
 ) : ViewModel() {
 
     private var currentArticleId: String? = null
     private var articleSectionId: String? = null
 
-    private val _viewState = MutableStateFlow<DetailContract.ViewState>(DetailContract.ViewState.Idle)
-    val viewState: StateFlow<DetailContract.ViewState> = _viewState
+    private val _viewState =
+        MutableStateFlow<DetailContract.ViewState>(DetailContract.ViewState.Idle)
+    val viewState: StateFlow<DetailContract.ViewState> = _viewState.asStateFlow()
 
     private val _viewEffect: Channel<DetailContract.ViewEffect> = Channel()
     val viewEffect = _viewEffect.receiveAsFlow()
@@ -67,7 +69,8 @@ class DetailViewModel @Inject constructor(
         viewModelScope.launch {
             currentArticleId?.let {
                 val articleDetail = getDetailArticleUseCase(it, articleSectionId ?: "")
-                if (articleDetail.article.id.isBlank()) _viewState.value = DetailContract.ViewState.Idle
+                if (articleDetail.article.id.isBlank()) _viewState.value =
+                    DetailContract.ViewState.Idle
                 else _viewState.value = DetailContract.ViewState.ArticleLoaded(articleDetail)
             }
         }

@@ -12,17 +12,18 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val getSectionsListUseCase: GetSectionsListUseCase
+    private val getSectionsListUseCase: GetSectionsListUseCase,
 ) : ViewModel() {
 
     private val _viewState = MutableStateFlow<ViewState>(ViewState.EmptyList)
-    val viewState: StateFlow<ViewState> = _viewState
+    val viewState: StateFlow<ViewState> = _viewState.asStateFlow()
 
     private val _viewEffect: Channel<ViewEffect> = Channel()
     val viewEffect = _viewEffect.receiveAsFlow()

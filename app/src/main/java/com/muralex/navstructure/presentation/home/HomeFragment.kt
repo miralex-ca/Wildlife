@@ -52,11 +52,9 @@ class HomeFragment : Fragment() {
     }
 
     private fun setUpObservation() {
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.viewState.collect { uiState ->
-                    renderViewState(uiState)
-                }
+        lifecycleScope.launchWhenStarted {
+            viewModel.viewState.collect { uiState ->
+                renderViewState(uiState)
             }
         }
 
