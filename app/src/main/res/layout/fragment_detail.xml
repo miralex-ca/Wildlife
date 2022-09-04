@@ -4,7 +4,7 @@
     <data>
         <variable
             name="article"
-            type="com.muralex.navstructure.domain.data.article.DetailArticleUI" />
+            type="com.muralex.wildlife.domain.data.article.DetailArticleUI" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

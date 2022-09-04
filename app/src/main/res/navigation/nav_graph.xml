@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/HomeFragment"
-        android:name="com.muralex.navstructure.presentation.home.HomeFragment"
+        android:name="com.muralex.wildlife.presentation.home.HomeFragment"
         android:label="@string/first_fragment_label"
         tools:layout="@layout/fragment_home">
         <action
@@ -30,7 +30,7 @@
 
     <fragment
         android:id="@+id/sectionFragment"
-        android:name="com.muralex.navstructure.presentation.section.SectionFragment"
+        android:name="com.muralex.wildlife.presentation.section.SectionFragment"
         android:label="SectionFragment" >
         <action
             android:id="@+id/action_sectionFragment_to_SecondFragment"
@@ -42,7 +42,7 @@
 
     <fragment
         android:id="@+id/SecondFragment"
-        android:name="com.muralex.navstructure.SecondFragment"
+        android:name="com.muralex.wildlife.SecondFragment"
         android:label="@string/second_fragment_label"
         tools:layout="@layout/fragment_second">
 
@@ -52,7 +52,7 @@
     </fragment>
     <fragment
         android:id="@+id/categoryFragment"
-        android:name="com.muralex.navstructure.presentation.category.CategoryFragment"
+        android:name="com.muralex.wildlife.presentation.category.CategoryFragment"
         android:label="CategoryFragment" >
         <action
             android:id="@+id/action_categoryFragment_to_detailFragment"
@@ -65,7 +65,7 @@
     </fragment>
     <fragment
         android:id="@+id/detailFragment"
-        android:name="com.muralex.navstructure.presentation.detail.DetailFragment"
+        android:name="com.muralex.wildlife.presentation.detail.DetailFragment"
         android:label="DetailFragment" />
 
 </navigation>
